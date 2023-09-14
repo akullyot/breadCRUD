@@ -39,12 +39,17 @@ breads.post('/', (request,response) =>
     response.redirect('/breads')
 });
 
-
+//Purpose: Create one new Bread
 breads.get('/new', (request, response) => 
 {
     response.render('newBread');
 });
-
+//Purpose: Create many new breads
+breads.get('/breads/data/seed', (request, response) =>
+{
+  
+}
+)
 //Dynamic Routes
 //Purpose: show the information for every existing bread
 breads.get('/:id', (request, response) => 
