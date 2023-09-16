@@ -57,7 +57,7 @@ breads.get('/new', (request, response) =>
 //Purpose: Create many new breads
 breads.get('/data/seed', (request, response) =>
 {
-    const newBreadsBulkDataArray = require('../models/breadBulkData.js');
+    const newBreadsBulkDataArray = require('../seed/breadBulkData.js');
     Bread.insertMany(newBreadsBulkDataArray)
     .then(createdBreads => {
         response.redirect('/breads')
