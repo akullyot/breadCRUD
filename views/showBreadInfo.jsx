@@ -1,10 +1,10 @@
 const React = require('react')
 const Default = require('./layouts/Default')
 
-function Show ({bread, index}) {
+function Show ({bread, defaultData}) {
   console.log(bread.name)
     return (
-        <Default>
+        <Default defaultData = {defaultData}>
         <h3>{bread.name}</h3>
         <p>
             and it
