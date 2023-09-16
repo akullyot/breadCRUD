@@ -1,10 +1,10 @@
 const React = require('react')
 const Default = require('./layouts/Default')
 
-function NewBread () 
+function NewBread ({defaultData}) 
 {
     return (
-      <Default>
+      <Default defaultData = {defaultData}>
         <h2>Add a new bread</h2>
         <form action="/breads" method="POST">
           <label htmlFor="name">Name</label>

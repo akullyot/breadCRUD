@@ -7,6 +7,7 @@ const breads   = express.Router();
 // Load in Data from models
 const Bread = require('../models/bread.js');
 
+
 // Static Routes first
 breads.get('/', (request, response) => 
 {
@@ -15,8 +16,11 @@ breads.get('/', (request, response) =>
     .then(foundBreads => {
       response.render('index',
       {
-          breadsData : foundBreads,
-          title : 'Bread Inventory List'
+          breadsData  : foundBreads,
+          defaultData : {
+                          title      : 'Bread Inventory List',
+                          pageCSS    : ''
+                        }
       });
     })
 });
@@ -42,12 +46,47 @@ breads.post('/', (request,response) =>
 //Purpose: Create one new Bread
 breads.get('/new', (request, response) => 
 {
-    response.render('newBread');
+    response.render('newBread',
+    {
+      defaultData : {
+                      title      : 'Create a New Bread',
+                      pageCSS    : ''
+                    }
+    });
 });
 //Purpose: Create many new breads
-breads.get('/breads/data/seed', (request, response) =>
+breads.get('/data/seed', (request, response) =>
 {
-  
+    const newBreadsBulkDataArray = 
+    [
+      {
+        name: 'Rye',
+        hasGluten: true,
+        image: 'https://images.unsplash.com/photo-1595535873420-a599195b3f4a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+      },
+      {
+        name: 'French',
+        hasGluten: true,
+        image: 'https://images.unsplash.com/photo-1534620808146-d33bb39128b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+      },
+      {
+        name: 'Gluten Free',
+        hasGluten: false,
+        image: 'https://images.unsplash.com/photo-1546538490-0fe0a8eba4e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80',
+      },
+      {
+        name: 'Pumpernickel',
+        hasGluten: true,
+        image: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80',
+      }
+    ]
+    Bread.insertMany(newBreadsBulkDataArray)
+    .then(createdBreads => {
+        response.redirect('/breads')
+    })
+    .catch(err => {
+      response.status(404).send('<h1> 404 Page not Found </h1>');
+    })
 }
 )
 //Dynamic Routes
@@ -59,8 +98,11 @@ breads.get('/:id', (request, response) =>
     {
         response.render('showBreadInfo', 
         {
-            bread: foundBread,
-            title: 'Bread Entry: ' + foundBread.name
+            bread       : foundBread,
+            defaultData : {
+                            title      : 'Bread Entry: ' + foundBread.name,
+                            pageCSS    : ''
+                          }
         });
     })
     .catch(err => {
@@ -74,10 +116,7 @@ breads.delete('/:id', (request, response) =>
   Bread.findByIdAndDelete(request.params.id)
   .then(deleteBread => 
   {
-      response.status(303).redirect('/breads', 
-        {
-          //TODO write in a delete alert
-        });
+      response.status(303).redirect('/breads');
   })
 });
 
@@ -108,7 +147,10 @@ breads.get('/:id/edit', (request, response) =>
       response.render('editPage', 
       {
           bread: foundBread,
-          title: 'Bread Entry: ' + foundBread.name + "Edit"
+          defaultData : {
+                          title      : 'Edit Bread: ' + foundBread.name,
+                          pageCSS    : ''
+                        }
       });
   })
   .catch(err => {
