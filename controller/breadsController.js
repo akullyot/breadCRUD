@@ -74,6 +74,8 @@ breads.get('/:id', (request, response) =>
     Bread.findById(request.params.id)
     .then(foundBread => 
     {
+        //Lets use our new helper method
+        const bakedBy = foundBread.getBakedBy();
         response.render('showBreadInfo', 
         {
             bread       : foundBread,
@@ -103,6 +105,7 @@ breads.put('/:id', (request, response) =>
 {
     //First lets check to make sure validations are fine on this end
     let schemaInformation = Bread.schema;
+    let isValid = true;
     for (let i=0; i< Object.keys(request.body).length; i++)
     {
         let currentField = [Object.keys(request.body)[i]];
@@ -113,7 +116,9 @@ breads.put('/:id', (request, response) =>
             if (!pathInfo.enumValues.includes(request.body[currentField]))
             {
                 //theyve entered an invalid enum value, throw it out before updating
+                isValid = false;
                 response.status(400).send('<h1> New entry attempt did not pass validation. </h1>');
+
             }
         }
         else if (pathInfo.instance === 'Boolean')
@@ -129,6 +134,8 @@ breads.put('/:id', (request, response) =>
           }
         }
     }
+    if (isValid)
+    {
       Bread.findByIdAndUpdate(request.params.id, request.body, { new: true }) 
       .then(updatedBread => {
 
@@ -138,6 +145,7 @@ breads.put('/:id', (request, response) =>
       .catch(err => {
         response.send('<h1> There was an unknown error when attempting editing this entry. please try again. </h1>');
       });
+    }
 });
 
 // EDIT

@@ -11,7 +11,14 @@ const breadSchema = new Schema(
       baker     : {type : String, enum: ['Rachel', 'Monica', 'Joey', 'Chandler', 'Ross', 'Phoebe'] }  
   }
 );
-//Purpose: Use said schema to creat a model 
+//Purpose: Helper method that returns the standard baked with love message
+breadSchema.methods.getBakedBy = function(){
+  return `${this.name} was baked with love by ${this.baker}`
+}
+
+
+
+//Purpose: Use said schema to create a model 
 const Bread = mongoose.model('Bread', breadSchema);
 //Im going to pull out all my helper methods/restrictions 
 // Syntax : key = field Name, value = the restrictions

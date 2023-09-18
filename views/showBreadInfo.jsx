@@ -15,7 +15,7 @@ function Show ({bread, defaultData}) {
             have gluten.
         </p>
         <img src={bread.image} alt={bread.name} />
-        <p> Bread was baked by {bread.baker}</p>
+        <p>{bread.getBakedBy()}</p>
 
         <form action={`/breads/${bread.id}?_method=DELETE`} method="POST">
             <input type='submit' value="DELETE"/>
