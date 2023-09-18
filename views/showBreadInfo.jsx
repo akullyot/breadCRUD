@@ -2,7 +2,6 @@ const React = require('react')
 const Default = require('./layouts/Default')
 
 function Show ({bread, defaultData}) {
-  console.log(bread.name)
     return (
         <Default defaultData = {defaultData}>
         <h3>{bread.name}</h3>
@@ -16,6 +15,8 @@ function Show ({bread, defaultData}) {
             have gluten.
         </p>
         <img src={bread.image} alt={bread.name} />
+        <p> Bread was baked by {bread.baker}</p>
+
         <form action={`/breads/${bread.id}?_method=DELETE`} method="POST">
             <input type='submit' value="DELETE"/>
         </form>

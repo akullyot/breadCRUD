@@ -101,19 +101,43 @@ breads.delete('/:id', (request, response) =>
 // UPDATE
 breads.put('/:id', (request, response) => 
 {
-    if(request.body.hasGluten === 'on')
+    //First lets check to make sure validations are fine on this end
+    let schemaInformation = Bread.schema;
+    for (let i=0; i< Object.keys(request.body).length; i++)
     {
-      request.body.hasGluten = true
-    } 
-    else 
-    {
-      request.body.hasGluten = false
+        let currentField = [Object.keys(request.body)[i]];
+        let pathInfo  = schemaInformation.paths[currentField];
+        if ( pathInfo.enumValues !== undefined && pathInfo.enumValues.length > 0)
+        {
+            //Purpose: do a validation check 
+            if (!pathInfo.enumValues.includes(request.body[currentField]))
+            {
+                //theyve entered an invalid enum value, throw it out before updating
+                response.status(400).send('<h1> New entry attempt did not pass validation. </h1>');
+            }
+        }
+        else if (pathInfo.instance === 'Boolean')
+        {
+          //Purpose: switch check to Boolean
+          if(request.body[currentField] === 'on')
+          {
+            request.body[currentField] = true
+          } 
+          else 
+          {
+            request.body.request.body[currentField] = false
+          }
+        }
     }
-    Bread.findByIdAndUpdate(request.params.id, request.body, { new: true }) 
+      Bread.findByIdAndUpdate(request.params.id, request.body, { new: true }) 
       .then(updatedBread => {
+
         console.log(updatedBread); 
         response.redirect(`/breads/${request.params.id}`) 
       })
+      .catch(err => {
+        response.send('<h1> There was an unknown error when attempting editing this entry. please try again. </h1>');
+      });
 });
 
 // EDIT
