@@ -14,6 +14,7 @@ breads.get('/', (request, response) =>
 {
   //Search the collection for all breads
   Bread.find()
+  .populate('baker')
     .then(foundBreads => {
       response.render('index',
       {
@@ -78,7 +79,9 @@ breads.get('/data/seed', (request, response) =>
 //Purpose: show the information for every existing bread
 breads.get('/:id', (request, response) => 
 {
+    //Populate is done to get the information from out baker.id to populate into bread.baker as a nested object
     Bread.findById(request.params.id)
+    .populate('baker')
     .then(foundBread => 
     {
         //Lets use our new helper method
@@ -158,17 +161,22 @@ breads.put('/:id', (request, response) =>
 // EDIT
 breads.get('/:id/edit', (request, response) => 
 {
-  Bread.findById(request.params.id)
-  .then(foundBread => 
+  Baker.find()
+  .then(foundBakers =>
   {
-      response.render('editPage', 
+      Bread.findById(request.params.id)
+      .then(foundBread => 
       {
-          bread: foundBread,
-          defaultData : {
-                          title      : 'Edit Bread: ' + foundBread.name,
-                          pageCSS    : ''
-                        }
-      });
+          response.render('editPage', 
+          {
+              bread: foundBread,
+              bakers: foundBakers,
+              defaultData : {
+                              title      : 'Edit Bread: ' + foundBread.name,
+                              pageCSS    : ''
+                            }
+          });
+      })
   })
   .catch(err => {
     response.status(404).send('<h1> 404 Page not Found </h1>');

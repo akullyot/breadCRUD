@@ -15,7 +15,8 @@ const breadSchema = new Schema(
 );
 //Purpose: Helper method that returns the standard baked with love message
 breadSchema.methods.getBakedBy = function(){
-  return `${this.name} was baked with love by ${this.baker}`
+  //this.baker.name is populated using Baker model
+  return `${this.name} was baked with love by ${this.baker.name}, who has been with us since ${this.baker.startDate.getFullYear()}`
 }
 
 
