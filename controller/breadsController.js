@@ -4,8 +4,9 @@ const express  = require('express');
 const breads   = express.Router();
 
 
-// Load in Data from models
+// Load in Data from models 
 const Bread = require('../models/bread.js');
+const Baker = require('../models/baker.js');
 
 
 // Static Routes first
@@ -46,13 +47,19 @@ breads.post('/', (request,response) =>
 //Purpose: Create one new Bread
 breads.get('/new', (request, response) => 
 {
+  //Purpose: get all the current potential bakers to fill in the form
+  Baker.find()
+  .then(foundBakers => {
     response.render('newBread',
     {
+      bakers: foundBakers,
       defaultData : {
                       title      : 'Create a New Bread',
                       pageCSS    : ''
                     }
     });
+  });
+
 });
 //Purpose: Create many new breads
 breads.get('/data/seed', (request, response) =>

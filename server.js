@@ -41,6 +41,9 @@ app.get('/', (request,response) =>
 //Breads Controller
 app.use('/breads', require('./controller/breadsController.js'));
 
+//Bakers Controller
+app.use('/bakers',require('./controller/bakersController.js') )
+
 //Catch all route
 app.get('*', (request,response) =>
 {
