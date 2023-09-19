@@ -5,6 +5,13 @@ const Baker = require('../models/baker.js')
 
 
 
+baker.get('/', (request,response) => {
+  Baker.find()
+  .populate('breads')
+  .then(foundBakers => {
+    response.send(foundBakers)
+  })
+});
 
 baker.get('/data/seed', (request, response) => 
 {
@@ -17,6 +24,25 @@ baker.get('/data/seed', (request, response) =>
       response.status(404).send('<h1> 404 Page not Found </h1>');
     })
 })
+
+
+//Dynamic Routes
+// Show: 
+baker.get('/:id', (request, response) => {
+  Baker.findById(request.params.id)
+      .populate('breads')
+      .then(foundBaker => {
+        response.render('bakerShow', {
+              baker: foundBaker,
+              defaultData : 
+              {
+                title      : 'Bread Inventory List',
+                pageCSS    : ''
+              }
+          })
+      })
+})
+
 
 
 // export

@@ -13,18 +13,23 @@ const Baker = require('../models/baker.js');
 breads.get('/', (request, response) => 
 {
   //Search the collection for all breads
-  Bread.find()
-  .populate('baker')
-    .then(foundBreads => {
-      response.render('index',
-      {
-          breadsData  : foundBreads,
-          defaultData : {
-                          title      : 'Bread Inventory List',
-                          pageCSS    : ''
-                        }
+  Baker.find().then(foundBakers =>
+  {
+    Bread.find()
+    .populate('baker')
+      .then(foundBreads => {
+        response.render('index',
+        {
+            breadsData  : foundBreads,
+            bakersData  : foundBakers,
+            defaultData : {
+                            title      : 'Bread Inventory List',
+                            pageCSS    : ''
+                          }
+        });
       });
-    })
+  })
+
 });
 
 breads.post('/', (request,response) =>
