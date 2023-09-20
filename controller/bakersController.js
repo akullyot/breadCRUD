@@ -41,7 +41,16 @@ baker.get('/:id', (request, response) => {
               }
           })
       })
-})
+});
+//DELETE a bread
+baker.delete('/:id', (request, response) =>
+{
+  Baker.findByIdAndDelete(request.params.id)
+  .then(deleteBaker => 
+  {
+      response.status(303).redirect('/breads');
+  })
+});
 
 
 
